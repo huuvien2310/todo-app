@@ -1,0 +1,34 @@
+version: "3.3"
+services:
+  todo-server:
+    image: todo-server
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    networks:
+      - todo-network
+    volumes:
+      - .:/app
+    depends_on:
+      - todo-db
+    command: npm run dev
+
+  todo-db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_DB=testdb
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - todo-network
+
+networks:
+  todo-network:
