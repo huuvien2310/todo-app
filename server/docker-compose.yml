@@ -7,28 +7,34 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
-    networks:
-      - todo-network
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=testdb
     volumes:
       - .:/app
     depends_on:
-      - todo-db
+      db:
+        condition: service_healthy
     command: npm run dev
 
-  todo-db:
+  db:
+    container_name: db
     image: postgres
     restart: always
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=testuser
-      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=testdb
     volumes:
       - ./data:/var/lib/postgresql/data
       - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-    networks:
-      - todo-network
-
-networks:
-  todo-network:
+    healthcheck:
+      test: ["CMD", "pg_isready", "--dbname=testdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
