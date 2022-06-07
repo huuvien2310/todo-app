@@ -1,4 +1,4 @@
-# TODO Server
+# TODO App
 
 ### Run
 - Run `npm i` to install packages
