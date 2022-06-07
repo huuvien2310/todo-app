@@ -1,0 +1,19 @@
+GET http://localhost:5000/api/todos
+###
+POST http://localhost:5000/api/todos HTTP/1.1
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "completed": false
+}
+###
+PUT http://localhost:5000/api/todos/1/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "delectus",
+    "completed": true
+}

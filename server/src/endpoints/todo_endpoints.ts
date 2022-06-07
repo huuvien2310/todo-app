@@ -23,7 +23,25 @@ async function postTodos(req: any, res: any): Promise<void>{
     }
 }
 
+async function putTodos(req: any, res: any): Promise<void> {
+    try {
+        const userId = req.params.userId;
+        const id = req.params.id;
+        const { title, completed } = req.body;
+        const result: any = await sql `
+            UPDATE todo
+            SET title = ${title}, completed = ${completed}
+            WHERE userId = ${userId} AND id = ${id}`;
+        res.status(201).json(result);
+    } catch(err) {
+        const userId = req.params.userId;
+        console.log(userId);
+        res.status(500).json(err);
+    }
+}
+
 export default {
     getTodos,
     postTodos,
+    putTodos,
 };
